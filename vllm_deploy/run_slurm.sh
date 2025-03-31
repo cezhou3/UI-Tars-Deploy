@@ -35,7 +35,7 @@ cat > slurm_submit.sh << EOF
 #SBATCH --output=vllm_uitars_%j.out
 #SBATCH --error=vllm_uitars_%j.err
 
-source ~/miniconda3/bin/activate agentS
+export PATH="/home/xut/miniconda3/envs/agentS/bin:$PATH"
 
 echo "Job started at \$(date)"
 echo "Running on \$(hostname)"
@@ -60,7 +60,7 @@ echo "Connection information saved to server_connection_info.txt"
 
 # Load necessary modules
 module purge
-module load cuda python
+module load cuda/12.1
 
 # Set advanced high-performance environment variables
 export CUDA_AUTO_BOOST=0  # Disable auto boost for consistent performance
