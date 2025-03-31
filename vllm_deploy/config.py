@@ -35,7 +35,7 @@ LOCAL_CONFIG = {
 
 # Slurm configuration
 SLURM_CONFIG = {
-    "partition": "gpu",  # Slurm partition to use
+    "partition": "gpu_wide72",  # Slurm partition to use
     "job_name": "vllm-ui-tars",  # Slurm job name
     "num_nodes": 1,  # Number of nodes to use
     "gpus_per_node": 1,  # Number of GPUs per node

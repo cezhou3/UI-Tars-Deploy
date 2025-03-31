@@ -23,8 +23,11 @@ cat > slurm_submit.sh << EOF
 #SBATCH --cpus-per-task=${CPUS_PER_TASK}
 #SBATCH --mem=${MEMORY}
 #SBATCH --time=${TIME}
-#SBATCH --output=vllm_qwenvl2_%j.out
-#SBATCH --error=vllm_qwenvl2_%j.err
+#SBATCH --constraint=a100
+#SBATCH --output=vllm_uitars_%j.out
+#SBATCH --error=vllm_uitars_%j.err
+
+source ~/miniconda3/bin/activate agentS
 
 echo "Job started at \$(date)"
 echo "Running on \$(hostname)"
