@@ -18,12 +18,19 @@ MODEL_CONFIG = {
 
 # Server configuration
 SERVER_CONFIG = {
-    "host": "0.0.0.0",
+    "host": "0.0.0.0",  # Listen on all interfaces for remote access
     "port": 8000,
     "max_num_batched_tokens": 16384,  # Further increased for better throughput
     "max_batch_size": 64,  # Increased for better throughput
     "max_wait_time": 0.05,  # Reduced wait time for faster response
     "distributed_setup": False,  # Set to True for multi-node deployment
+    
+    # Security settings
+    "api_keys": ["sk-YOUR_DEFAULT_API_KEY"],  # List of valid API keys (replace with actual keys)
+    "enable_auth": True,  # Enable API key authentication
+    "cors_allow_origins": ["*"],  # Allowed origins for CORS (restrict in production)
+    "public_hostname": "",  # Will be set dynamically in Slurm job
+    "https": False,  # Set to True to enable HTTPS (requires SSL certificates)
 }
 
 # Local deployment configuration
@@ -42,4 +49,15 @@ SLURM_CONFIG = {
     "cpus_per_task": 8,  # Increased CPU allocation for better throughput
     "memory": "64G",  # Increased memory allocation
     "time": "120:00:00",  # Time limit for the job
+    "network_interface": "eth0",  # Network interface to use (adjust for your cluster)
+    "port": 8000,  # Port to expose (should match SERVER_CONFIG["port"])
+    "external_port": 8000,  # External port (when using port forwarding)
 }
+
+# Generate a random API key if needed
+def generate_api_key():
+    import secrets
+    return f"sk-{secrets.token_hex(16)}"
+
+# API key file path
+API_KEY_PATH = "api_keys.txt"
