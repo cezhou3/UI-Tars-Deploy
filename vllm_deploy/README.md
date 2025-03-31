@@ -43,23 +43,60 @@ bash run_local.sh
 bash run_slurm.sh
 ```
 
-### Example Query (Text only)
+After submitting the Slurm job, the system will:
+1. Generate a unique API key for secure access
+2. Start the vLLM server on the allocated node
+3. Create a `server_connection_info.txt` file with connection details
+
+## Remote Access
+
+### Finding Connection Information
+
+After the Slurm job starts, check the `server_connection_info.txt` file which contains:
+- Server URL (typically http://[node-ip]:8000)
+- Generated API key
+- Example curl command
+
+### Example: Connecting from Local Machine
+
+1. Note the server URL and API key from `server_connection_info.txt`
+2. Use the query_model.py script:
 
 ```bash
-python examples/query_model.py --prompt "Explain quantum computing in simple terms."
+python examples/query_model.py --host [node-ip] --port 8000 --api-key [your-api-key] --prompt "Hello, world!"
 ```
 
-### Example Query (Image + Text)
+### API Key Authentication
+
+All requests to the server require authentication using the generated API key:
 
 ```bash
-python examples/query_model.py --prompt "Describe this image in detail." --image path/to/your/image.jpg
+curl -X POST "http://[node-ip]:8000/v1/completions" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer [your-api-key]" \
+  -d '{"model":"UI-TARS-7B-DPO", "prompt":"Hello, world", "max_tokens":100}'
 ```
+
+### Multimodal Requests
+
+To send an image along with text:
+
+```bash
+python examples/query_model.py --host [node-ip] --port 8000 --api-key [your-api-key] --prompt "Describe this image" --image path/to/image.jpg
+```
+
+## Security Recommendations
+
+1. Do not share API keys with unauthorized users
+2. Consider setting up HTTPS for production deployments
+3. Restrict CORS origins in config.py for production use
+4. Use a firewall to limit access to the server port
 
 ## Performance Monitoring
 
 To monitor server performance:
 ```bash
-python examples/monitor_performance.py
+python examples/monitor_performance.py --host [node-ip] --port 8000 --api-key [your-api-key]
 ```
 
 ## Configuration
